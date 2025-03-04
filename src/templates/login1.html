@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheeshA - Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #181818;
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('https://i.ibb.co/Mfq7hSG/6000397.jpg');
+            background-size: cover;
+            background-position: center;
+            background-color: rgba(45, 38, 25, 0.9);
+            background-blend-mode: overlay;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #383838;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background: linear-gradient(145deg, #F8e9ab, #f7df8b);
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .toggle-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 0;
+        }
+
+        .toggle-button {
+            background-color: #383838;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 50%;
+        }
+
+        .toggle-button.active {
+            background-color: #f8e9ab;
+            color: black;
+        }
+
+        .toggle-button:first-child {
+            border-top-left-radius: 5px;
+            border-bottom-left-radius: 5px;
+        }
+
+        .toggle-button:last-child {
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        #webcam-container {
+            margin: 20px 0;
+        }
+
+        #webcam, #captured-image {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SheeshA - Login</h1>
+        
+        <!-- Flash Messages -->
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Login Type Toggle -->
+        <div class="toggle-container">
+            <button id="traditional-toggle" class="toggle-button active" type="button">Traditional</button>
+            <button id="face-toggle" class="toggle-button" type="button">Face Recognition</button>
+        </div>
+
+        <!-- Login Form -->
+        <form method="POST" id="login-form">
+            {{ form.csrf_token }}
+            
+            <!-- Traditional Login Fields -->
+            <div id="traditional-form">
+                <div class="form-group">
+                    {{ form.username.label() }}
+                    {{ form.username(class="form-control", placeholder="Enter Username") }}
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <div class="error-text">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    {{ form.password.label() }}
+                    {{ form.password(class="form-control", placeholder="Enter Password") }}
+                    {% if form.password.errors %}
+                        {% for error in form.password.errors %}
+                            <div class="error-text">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Face Recognition Fields -->
+            <div id="face-recognition-form" class="hidden">
+                <div class="form-group">
+                    {{ form.username.label() }}
+                    {{ form.username(class="form-control", placeholder="Enter Username") }}
+                    {% if form.username.errors %}
+                        {% for error in form.username.errors %}
+                            <div class="error-text">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div id="webcam-container">
+                    <label>Face Recognition:</label>
+                    <video id="webcam" autoplay playsinline></video>
+                    <canvas id="canvas" style="display: none;"></canvas>
+                    <button id="capture-button" class="button" type="button">Capture Image</button>
+                    <div id="captured-image-container" style="display: none;">
+                        <img id="captured-image" alt="Captured image">
+                    </div>
+                </div>
+                {{ form.image_data(id="image-data", class="hidden") }}
+            </div>
+
+            <button type="submit" class="button">Login</button>
+        </form>
+        
+        <a href="{{ url_for('register_page') }}" class="button">Don't have an account? Register</a>
+    </div>
+
+    <script>
+        const traditionalToggle = document.getElementById('traditional-toggle');
+        const faceToggle = document.getElementById('face-toggle');
+        const traditionalForm = document.getElementById('traditional-form');
+        const faceRecognitionForm = document.getElementById('face-recognition-form');
+        const video = document.getElementById('webcam');
+        const canvas = document.getElementById('canvas');
+        const captureButton = document.getElementById('capture-button');
+        const capturedImageContainer = document.getElementById('captured-image-container');
+        const capturedImage = document.getElementById('captured-image');
+        const imageDataField = document.getElementById('image-data');
+        const loginForm = document.getElementById('login-form');
+        const usernameField = document.querySelector('input[name="username"]');
+        const passwordField = document.querySelector('input[name="password"]');
+        let stream;
+
+        // Toggle between login methods
+        traditionalToggle.addEventListener('click', () => {
+            traditionalToggle.classList.add('active');
+            faceToggle.classList.remove('active');
+            traditionalForm.classList.remove('hidden');
+            faceRecognitionForm.classList.add('hidden');
+            stopWebcam();
+            enableTraditionalFields(true);
+        });
+
+        faceToggle.addEventListener('click', () => {
+            faceToggle.classList.add('active');
+            traditionalToggle.classList.remove('active');
+            faceRecognitionForm.classList.remove('hidden');
+            traditionalForm.classList.add('hidden');
+            setupWebcam();
+            enableTraditionalFields(false);
+        });
+
+        // Enable/disable traditional fields
+        function enableTraditionalFields(enable) {
+            if (usernameField && passwordField) {
+                usernameField.required = enable;
+                passwordField.required = enable;
+                usernameField.disabled = !enable;
+                passwordField.disabled = !enable;
+                if (!enable) {
+                    usernameField.value = '';
+                    passwordField.value = '';
+                }
+            }
+        }
+
+        // Webcam setup
+        async function setupWebcam() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                video.srcObject = stream;
+                video.style.display = 'block';
+                capturedImageContainer.style.display = 'none';
+                captureButton.textContent = 'Capture Image';
+            } catch (err) {
+                console.error("Error accessing webcam:", err);
+                alert("Error accessing webcam: " + err.message);
+            }
+        }
+
+        function stopWebcam() {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+            video.srcObject = null;
+        }
+
+        // Image capture
+        captureButton.addEventListener('click', () => {
+            if (captureButton.textContent === 'Retake') {
+                video.style.display = 'block';
+                capturedImageContainer.style.display = 'none';
+                captureButton.textContent = 'Capture Image';
+                imageDataField.value = '';
+                return;
+            }
+
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            
+            capturedImage.src = imageDataUrl;
+            capturedImageContainer.style.display = 'block';
+            video.style.display = 'none';
+            imageDataField.value = imageDataUrl;
+            captureButton.textContent = 'Retake';
+        });
+
+        // Form submission
+        loginForm.addEventListener('submit', async (e) => {
+            if (faceToggle.classList.contains('active')) {
+                // Face recognition login
+                if (!imageDataField.value) {
+                    e.preventDefault();
+                    alert('Please capture an image before submitting');
+                    return;
+                }
+            }
+        });
+
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', stopWebcam);
+
+        // Initialize traditional login by default
+        traditionalToggle.click();
+    </script>
+</body>
+</html>

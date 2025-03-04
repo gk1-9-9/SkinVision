@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% block title %}
+Welcome to PS Hotel Booking
+{% endblock %}
+{% block content %}
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheeshA</title>
+    <style>
+        body {
+            background-image: url('https://i.ibb.co/Mfq7hSG/6000397.jpg'); /* Ensure the path is correct */
+            background-color: 181818;
+            background-color: rgba(45, 38, 25, 0.9);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-blend-mode: overlay;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 40px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            max-width: 600px;
+            margin: 15% auto;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #28a745;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2em;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .button:hover {
+            background-color: #218838;
+            transform: translateY(-3px);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10% auto;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .button {
+                padding: 10px 20px;
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Lets Get Started</h1>
+        <a href="{{ url_for('checkPage') }}" class="button">Acne</a>
+        <a href="{{ url_for('checkJaundicePage') }}" class="button">Jaundice Prediction</a>
+    </div>
+</body>
+{% endblock %}

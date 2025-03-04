@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Send Medical Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #45a049;
+        }
+        
+        .home-button {
+            background-color: #008CBA;
+        }
+        
+        .home-button:hover {
+            background-color: #007399;
+        }
+        
+        #feedback-area {
+            width: 100%;
+            min-height: 150px;
+            margin: 10px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+        
+        .email-form {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        .buttons-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% if strr %}
+        <div class="email-form">
+            <h3>Your Medical Report</h3>
+            <textarea id="feedback-area" readonly>{{ strr }}</textarea>
+            
+            <div class="buttons-container">
+                <form method="POST">
+                    {{ form.csrf_token }}
+                    <button type="submit" class="button">Send to My Email</button>
+                </form>
+                <a href="{{ url_for('home_page') }}" class="button home-button">Back to Home</a>
+            </div>
+        </div>
+    {% else %}
+        <div class="email-form">
+            <h3>No Report Available</h3>
+            <p>Please generate a medical report first.</p>
+            <a href="{{ url_for('home_page') }}" class="button home-button">Back to Home</a>
+        </div>
+    {% endif %}
+</body>
+</html>

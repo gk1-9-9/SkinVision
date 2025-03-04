@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SheeshA - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+        background-image: url('https://i.ibb.co/Mfq7hSG/6000397.jpg');
+        background-color: 181818;
+        color: white;
+        font-family: 'Poppins', sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-size: cover;
+        background-position: center;
+        background-color: rgba(45, 38, 25, 0.9); 
+        background-blend-mode:overlay;
+        }
+
+        .container {
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 2.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 1.1rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #444;
+            border-radius: 5px;
+            background-color: #383838;
+            color: white;
+            font-size: 1.1rem;
+            box-sizing: border-box;
+        }
+
+        .button {
+            background: linear-gradient(145deg, #F8e9ab, #f7df8b);
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            font-size: 1.1rem;
+            text-decoration: none;
+            display: inline-block;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+
+        .button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.35);
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .error {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .error-text {
+            color: #dc3545;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        #webcam-container {
+            margin: 20px 0;
+        }
+
+        #webcam, #captured-image {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            border-radius: 5px;
+            margin: 10px auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SheeshA - Register</h1>
+        
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-message {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <form method="POST" id="register-form" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            
+            <div class="form-group">
+                {{ form.username.label() }}
+                {{ form.username(class="form-control", placeholder="Enter Username") }}
+                {% if form.username.errors %}
+                    <div class="error-text">
+                        {% for error in form.username.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.email_address.label() }}
+                {{ form.email_address(class="form-control", placeholder="Enter Email") }}
+                {% if form.email_address.errors %}
+                    <div class="error-text">
+                        {% for error in form.email_address.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.password1.label() }}
+                {{ form.password1(class="form-control", placeholder="Enter Password") }}
+                {% if form.password1.errors %}
+                    <div class="error-text">
+                        {% for error in form.password1.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                {{ form.password2.label() }}
+                {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+                {% if form.password2.errors %}
+                    <div class="error-text">
+                        {% for error in form.password2.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div id="webcam-container" class="form-group">
+                <label>Face Capture:</label>
+                <video id="webcam" autoplay playsinline></video>
+                <button id="capture-button" class="button" type="button">Capture Image</button>
+                <div id="captured-image-container" style="display: none;">
+                    <img id="captured-image" alt="Captured image">
+                </div>
+                {{ form.image_data(id="image-data") }}
+                {% if form.image_data.errors %}
+                    <div class="error-text">
+                        {% for error in form.image_data.errors %}
+                            <span class="error">{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="button">Register</button>
+        </form>
+        
+        <a href="{{ url_for('login_page') }}" class="button">Already have an account? Login</a>
+    </div>
+
+    <script>
+        const video = document.getElementById('webcam');
+        const captureButton = document.getElementById('capture-button');
+        const capturedImageContainer = document.getElementById('captured-image-container');
+        const capturedImage = document.getElementById('captured-image');
+        const imageDataField = document.getElementById('image-data');
+        const form = document.getElementById('register-form');
+        let stream;
+
+        async function setupWebcam() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: {
+                        width: { ideal: 640 },
+                        height: { ideal: 480 }
+                    }
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                alert("Error accessing webcam: " + err.message);
+            }
+        }
+
+        captureButton.addEventListener('click', () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0);
+            
+            const imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            capturedImage.src = imageDataUrl;
+            capturedImageContainer.style.display = 'block';
+            imageDataField.value = imageDataUrl;
+        });
+
+        window.addEventListener('beforeunload', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        });
+
+        // Initialize webcam on page load
+        setupWebcam();
+    </script>
+</body>
+</html>
